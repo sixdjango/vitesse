@@ -16,7 +16,7 @@ const { t } = useI18n()
 
 <template>
   <div>
-    <div text-4xl>
+    <div text-4xl text-blue class="text-blue flex" border-blue>
       <div i-carbon-campsite inline-block />
     </div>
     <p>

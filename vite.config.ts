@@ -7,6 +7,7 @@ import Vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Inspect from 'vite-plugin-inspect'
+import Layout from 'vite-plugin-vue-layouts'
 // import visualizerPlugin from 'rollup-plugin-visualizer'
 import { createVitePlugins } from './build/plugins'
 import { wrapperEnv } from './build/utils'
@@ -24,20 +25,20 @@ export default ({ command, mode }: ConfigEnv) => {
   return defineConfig({
     base: VITE_PUBLIC_PATH,
     resolve: {
-      alias: [{
-        find: /^~\//,
-        replacement: `${path.resolve(__dirname, 'src')}/`,
-      },
-      {
-        find: /^@\//,
-        replacement: `${path.resolve(__dirname, 'src')}/`,
-      },
-      {
-        find: /^vue$/,
-        replacement: `vue/dist/vue.esm-browser${isBuild ? '.prod' : ''}`,
-      },
-
-      ],
+      alias: [
+        {
+          find: /^~\//,
+          replacement: `${path.resolve(__dirname, 'src')}/`
+        },
+        {
+          find: /^@\//,
+          replacement: `${path.resolve(__dirname, 'src')}/`
+        },
+        {
+          find: /^vue$/,
+          replacement: `vue/dist/vue.esm-browser${isBuild ? '.prod' : ''}`
+        }
+      ]
       // dedupe: ['vue'],
     },
     build: {
@@ -48,7 +49,7 @@ export default ({ command, mode }: ConfigEnv) => {
           //   gzipSize: true,
           //   brotliSize: true,
           // }),
-        ],
+        ]
       },
       minify: 'terser',
       sourcemap: VITE_DROP_CONSOLE,
@@ -56,36 +57,27 @@ export default ({ command, mode }: ConfigEnv) => {
         compress: {
           keep_infinity: true,
           drop_console: VITE_DROP_CONSOLE,
-          drop_debugger: VITE_DROP_CONSOLE,
-        },
-      },
+          drop_debugger: VITE_DROP_CONSOLE
+        }
+      }
     },
     server: {
       host: true,
       port: VITE_PORT,
-      proxy: createProxy(VITE_PROXY),
+      proxy: createProxy(VITE_PROXY)
     },
 
     plugins: [
       Vue(),
       // https://github.com/antfu/unplugin-auto-import
       AutoImport({
-        imports: [
-          'vue',
-          'vue-router',
-          'vue-i18n',
-          'vue/macros',
-          '@vueuse/head',
-          '@vueuse/core',
-        ],
+        imports: ['vue', 'vue-router', 'vue-i18n', 'vue/macros', '@vueuse/head', '@vueuse/core'],
         dts: 'src/auto-imports.d.ts',
-        dirs: [
-          'src/composables',
-          'src/stores',
-          'src/singleton',
-        ],
-        vueTemplate: true,
+        dirs: ['src/composables', 'src/stores', 'src/singleton'],
+        vueTemplate: true
       }),
+
+      Layout(),
 
       // https://github.com/antfu/unplugin-vue-components
       Components({
@@ -93,7 +85,7 @@ export default ({ command, mode }: ConfigEnv) => {
         extensions: ['vue', 'md'],
         // allow auto import and register components used in markdown
         include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-        dts: 'src/components.d.ts',
+        dts: 'src/components.d.ts'
       }),
 
       // https://github.com/intlify/bundle-tools/tree/main/packages/unplugin-vue-i18n
@@ -101,15 +93,14 @@ export default ({ command, mode }: ConfigEnv) => {
         runtimeOnly: true,
         compositionOnly: true,
         fullInstall: true,
-        include: [path.resolve(__dirname, 'locales/**')],
+        include: [path.resolve(__dirname, 'locales/**')]
       }),
 
       // https://github.com/antfu/vite-plugin-inspect
       // Visit http://localhost:3333/__inspect/ to see the inspector
       Inspect(),
 
-      ...createVitePlugins(viteEnv, isBuild),
-    ],
-
+      ...createVitePlugins(viteEnv, isBuild)
+    ]
   })
 }

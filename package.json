@@ -28,8 +28,6 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@yc-tech/eslint-config": "^0.1.1",
-    "@yc-tech/prettier-config": "^0.1.0",
     "@iconify-json/carbon": "^1.1.16",
     "@intlify/unplugin-vue-i18n": "^0.9.2",
     "@types/markdown-it-link-attributes": "^3.0.1",
@@ -37,6 +35,8 @@
     "@types/shelljs": "^0.8.11",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/test-utils": "^2.3.1",
+    "@yc-tech/eslint-config": "^0.1.1",
+    "@yc-tech/prettier-config": "^0.1.0",
     "autoprefixer": "^10.4.18",
     "critters": "^0.0.16",
     "cross-env": "^7.0.3",
@@ -60,6 +60,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-inspect": "^0.8.3",
+    "vite-plugin-vue-layouts": "^0.11.0",
     "vitest": "^0.29.3",
     "vue-tsc": "^1.2.0"
   }

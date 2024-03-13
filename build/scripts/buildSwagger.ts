@@ -1,69 +1,40 @@
 import path from 'node:path'
-import fs from 'node:fs'
 import generateApi from 'swagger-typescript-api'
 
-const apis: any[] = []
-let enumObj: any = {}
-generateApi.generateApi({
-  name: 'src/apis/swagger/apiModel.d.ts',
-  output: path.resolve(process.cwd(), './'),
-  url: 'http://120.24.57.120:8088/v3/api-docs',
-  // url: 'http://192.168.50.38:8080/v3/api-docs',
-  generateClient: false,
-  hooks: {
-    onFormatRouteName: (routeInfo) => {
-      const route = routeInfo.route
-      if (route && route.startsWith('/pinvo/api/v1')) {
-        const apiUrl = route.replace('/pinvo/api/v1', '')
-        // @ts-expect-error:type error
-        const requestName = routeInfo.requestBody?.content?.['application/json'].schema?.$ref?.replace('#/components/schemas/', '')
-        const responseName = routeInfo.responsesTypes[0].type
-        const list = apiUrl.split('/')
-        const name = list.reduce((pre, curr) => {
-          if (curr)
-            pre = pre + curr[0].toUpperCase() + curr.substring(1)
+export function generateSwaggerApi(options: { dir: string; url: string }) {
+  const { dir, url } = options
+  generateApi.generateApi({
+    name: 'ApiModel.ts',
+    templates: path.resolve(process.cwd(), './build/templates'),
+    extraTemplates: [
+      {
+        name: 'nice-axios.ts',
+        path: path.resolve(process.cwd(), './build/templates/nice-axios.ejs'),
+      },
+    ],
+    cleanOutput: true,
+    output: path.resolve(process.cwd(), dir),
+    url,
+    httpClientType: 'axios',
+    singleHttpClient: true,
+    // url: 'http://192.168.50.38:8080/v3/api-docs',
+    generateClient: true,
+    extractEnums: true,
+    generateUnionEnums: true,
+    modular: true,
+    unwrapResponseData: true,
+  })
+}
 
-          return pre
-        }, '')
-
-        apis.push({ name, url: apiUrl, desc: routeInfo.description, requestName, responseName })
-      }
-      // routeInfo.route
-      // console.log(routeInfo.requestBody?.content?.['application/json']);
-    },
-    onCreateComponent: (component) => {
-      // 所有 enum 类型
-      if (component.typeName === 'AllEnumsInfo') {
-        const props = component.rawTypeData?.properties
-        enumObj = props
-      }
-    },
-  },
-}).then(() => {
-  let content = apis.reduce((pre, curr) => {
-    if (curr)
-      pre = `${pre}\n` + `  /**\n  ${curr.desc}\n  @request: ${curr.requestName}\n  @response: ${curr.responseName}\n  */\n  ${curr.name} = '${curr.url}',\n`
-
-    return pre
-  }, '')
-
-  content = `export enum ApiEnum {${content}}\n`
-  fs.writeFileSync('src/apis/swagger/apiEnum.ts', content, { encoding: 'utf-8' })
-
-  if (enumObj) {
-    const enumContent = Object.keys(enumObj).reduce((pre, curr) => {
-      const currEnum = enumObj[curr]
-      pre = `${pre}/**\n  ${currEnum.description}\n  */\nexport enum ${currEnum.example} {\n`
-      currEnum.enum.forEach((k: string) => {
-        pre += `  ${k} = '${k}',\n`
-      })
-      pre += '}\n'
-
-      return pre
-    }, '')
-
-    fs.writeFileSync('src/enums/swagger.ts', enumContent, { encoding: 'utf-8' })
-  }
-
-  // console.log(apis);
+generateSwaggerApi({
+  dir: 'src/api',
+  url: 'xxx',
 })
+
+// generateSwaggerApi({
+//   dir: 'src/swagger',
+//   url: 'http://127.0.0.1:8000/openapi.json',
+//   prefix: 'AutoBkp',
+//   baseUrl: '',
+//   addMethod: true,
+// })

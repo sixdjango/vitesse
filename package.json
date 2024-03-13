@@ -15,11 +15,10 @@
     "test:e2e": "cypress open",
     "test:unit": "vitest",
     "typecheck": "vue-tsc --noEmit",
-    "up": "taze major -I",
-    "postinstall": "npx simple-git-hooks"
+    "up": "taze major -I"
   },
   "dependencies": {
-    "@vueuse/core": "^9.13.0",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",
     "element-plus": "^2.6.0",
     "nprogress": "^0.2.0",
@@ -29,9 +28,8 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.37.0",
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@yc-tech/eslint-config": "^0.1.1",
+    "@yc-tech/prettier-config": "^0.1.0",
     "@iconify-json/carbon": "^1.1.16",
     "@intlify/unplugin-vue-i18n": "^0.9.2",
     "@types/markdown-it-link-attributes": "^3.0.1",
@@ -43,14 +41,10 @@
     "critters": "^0.0.16",
     "cross-env": "^7.0.3",
     "cypress": "^12.8.1",
-    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.0.3",
-    "eslint": "^8.36.0",
-    "eslint-plugin-cypress": "^2.12.1",
     "esno": "^4.0.0",
     "https-localhost": "^4.7.1",
     "less": "^4.2.0",
-    "lint-staged": "^13.2.0",
     "pnpm": "^7.30.0",
     "rollup-plugin-visualizer": "^5.9.0",
     "shelljs": "^0.8.5",
@@ -68,16 +62,5 @@
     "vite-plugin-inspect": "^0.8.3",
     "vitest": "^0.29.3",
     "vue-tsc": "^1.2.0"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*": "eslint --fix"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
